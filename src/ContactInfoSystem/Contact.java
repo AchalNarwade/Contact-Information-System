@@ -18,10 +18,10 @@ public class Contact {
     public void displayContact(){
         System.out.println("CONTACT Details: ");
         System.out.println(
-                "\nName    : " + name +
+                "Name    : " + name +
                 "\nPhone   : " + phoneNumber +
                 "\nEmail   : " + email +
-                "\nAddress : " + address
+                "\nAddress : " + address + "\n"
         );
     }
 

@@ -8,7 +8,7 @@ public class ContactManager {
 
     public void addContact(Contact contact){
         if(findContact(contact.getName()) !=null) {
-            System.out.println("Contact with Name: " + contact.getName() + "already exists!");
+            System.out.println("Contact with Name: " + contact.getName() + " already exists!");
             return;
         }
         contacts.add(contact);
@@ -32,6 +32,18 @@ public class ContactManager {
             }
         }
         return null;
+    }
+
+    public void deleteContact(String name){
+        Contact contactToDelete = findContact(name);
+
+        if(contactToDelete != null){
+            contacts.remove(contactToDelete);
+            System.out.println("Contact successfully deleted");
+        }
+        else {
+            System.out.println("Contact not found");
+        }
     }
 
 
