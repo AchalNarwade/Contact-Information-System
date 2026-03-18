@@ -7,8 +7,16 @@ public class ContactManager {
     private ArrayList<Contact> contacts = new ArrayList<>();
 
     public void addContact(Contact contact){
+
+        //Strict case
+        if(findContactByPhone(contact.getPhoneNumber()) != null){
+            System.out.println("A contact with this phone number already exists!");
+            return;
+        }
+
+        //soft check(name)
         if(findContact(contact.getName()) !=null) {
-            System.out.println("Contact with Name: " + contact.getName() + " already exists!");
+            System.out.println("A contact with this name already exits!");
             return;
         }
         contacts.add(contact);
@@ -31,7 +39,7 @@ public class ContactManager {
             }
         }
     }
-
+//here the contact object is returned as the return type is contact instead of void
     public Contact findContact(String name){
         for(Contact c : contacts){
             if(c.getName().equals(name)){
@@ -52,7 +60,15 @@ public class ContactManager {
             System.out.println("Contact not found");
         }
     }
-
+//FIND CONTACT BY PHONE
+    public Contact findContactByPhone(String phone){
+        for (Contact c : contacts){
+            if(c.getPhoneNumber().equals(phone)){
+                return c;
+            }
+        }
+        return null;
+    }
 
     public int getTotalContacts(){ return contacts.size();}
 }

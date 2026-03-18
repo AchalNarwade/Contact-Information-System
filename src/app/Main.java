@@ -14,10 +14,11 @@ public class Main {
         while(true){
             System.out.println("\n1. Add Contact");
             System.out.println("2. Show All Contacts");
-            System.out.println("3. Search Contact");
-            System.out.println("4. Delete Contact");
-            System.out.println("5. Total Contacts");
-            System.out.println("6. Exit");
+            System.out.println("3. Search by Name");
+            System.out.println("4. Search by Phone");
+            System.out.println("5. Delete Contact");
+            System.out.println("6. Total Contacts");
+            System.out.println("7. Exit");
             System.out.print("Enter your choice: ");
 
 
@@ -56,14 +57,30 @@ public class Main {
                 String searchName = sc.nextLine();
                 //connects contact manger and contact class
                 Contact contactToSearch = contactManager.findContact(searchName);
+
                 if(contactToSearch != null){
                     contactToSearch.displayContact();
                 }else{
-                    System.out.println("Contact not found");
+                    System.out.println("No contact found with the given detail.");
                 }
                 break;
 
+
             case 4:
+                sc.nextLine();
+                System.out.println("Enter phone number: ");
+                String searchPhone = sc.nextLine();
+
+                Contact contactByPhone = contactManager.findContactByPhone(searchPhone);
+
+                if(contactByPhone != null){
+                    contactByPhone.displayContact();
+                } else {
+                    System.out.println("No contact found with given phone number.");
+                }
+                break;
+
+            case 5:
                 sc.nextLine();
                 System.out.println("Enter Name");
                 String deleteContact = sc.nextLine();
@@ -71,11 +88,11 @@ public class Main {
                 contactManager.deleteContact(deleteContact);
                 break;
 
-            case 5:
+            case 6:
                 System.out.println("Total contacts: " + contactManager.getTotalContacts());
                 break;
 
-            case 6:
+            case 7:
                 System.exit(0);
         }
             
