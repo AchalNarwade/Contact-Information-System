@@ -18,9 +18,16 @@ public class ContactManager {
     public void showAllContacts(){
         if(contacts.isEmpty()){
             System.out.println("No Contacts Available!");
-        }else{
+        } else {
+            System.out.println("\n===== CONTACT LIST =====\n");
+            System.out.printf("%-5s %-15s %-15s %-25s\n", "No", "Name", "Phone", "Email");
+            System.out.println("-------------------------------------------------------------");
+
+            int i = 1;
             for(Contact c : contacts){
-                c.displayContact();
+                System.out.printf("%-5d", i);
+                c.displayShortContacts();
+                i++;
             }
         }
     }

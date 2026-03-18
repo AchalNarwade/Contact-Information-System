@@ -25,6 +25,11 @@ public class Contact {
         );
     }
 
+//DISPLAY SHORT CONTACTS
+    public void displayShortContacts(){
+        System.out.println(name + " |" + phoneNumber + " |" + email + " |");
+    }
+
 
 
 //GETTER METHODS

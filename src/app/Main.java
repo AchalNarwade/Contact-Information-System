@@ -18,13 +18,14 @@ public class Main {
             System.out.println("4. Delete Contact");
             System.out.println("5. Total Contacts");
             System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
 
 
         int choice = 0;
         try {
             choice = sc.nextInt();
         } catch (Exception e) {
-            System.out.println("Invalid Choice");
+            System.out.println("Invalid input. Please enter a number.");
             sc.nextLine(); //to clear scanner buffer
         }
 
@@ -60,6 +61,7 @@ public class Main {
                 }else{
                     System.out.println("Contact not found");
                 }
+                break;
 
             case 4:
                 sc.nextLine();
