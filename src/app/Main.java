@@ -16,9 +16,10 @@ public class Main {
             System.out.println("2. Show All Contacts");
             System.out.println("3. Search by Name");
             System.out.println("4. Search by Phone");
-            System.out.println("5. Delete Contact");
-            System.out.println("6. Total Contacts");
-            System.out.println("7. Exit");
+            System.out.println("5. Update Contact");
+            System.out.println("6. Delete Contact");
+            System.out.println("7. Total Contacts");
+            System.out.println("8. Exit");
             System.out.print("Enter your choice: ");
 
 
@@ -82,17 +83,71 @@ public class Main {
 
             case 5:
                 sc.nextLine();
+                System.out.println("Enter the phone number of contact to update: ");
+                String updatePhone = sc.nextLine();
+
+                Contact contactToUpdate = contactManager.findContactByPhone(updatePhone);
+
+                if(contactToUpdate != null){
+                    System.out.println("\nWhat do you want to update?");
+                    System.out.println("1. Phone");
+                    System.out.println("2. Email");
+                    System.out.println("3. Address");
+
+                    int updateChoice = sc.nextInt();
+                    sc.nextLine(); //to clear buffer
+
+                    switch(updateChoice){
+
+                        case 1:
+                            System.out.println("Enter new Phone number");
+                            String newPhone = sc.nextLine();
+
+                            //check duplicate phone
+                            if(contactManager.findContactByPhone(newPhone) != null){
+                                System.out.println("Phone number already exists!");
+                            }else{
+                                contactToUpdate.setPhoneNumber(newPhone);
+                                System.out.println("Phone number updated successfully");
+                            }
+                            break;
+
+                        case 2:
+                            System.out.println("Enter new Email: ");
+                            String newEmail = sc.nextLine();
+                            contactToUpdate.setEmail(newEmail);
+                            System.out.println("Email updated successfully");
+                            break;
+
+                        case 3:
+                            System.out.println("Enter new Address: ");
+                            String newAddress = sc.nextLine();
+                            contactToUpdate.setAddress(newAddress);
+                            System.out.println("Address updated successfully");
+                            break;
+
+                        default:
+                            System.out.println("Invalid choice");
+                    }
+                }else {
+                    System.out.println("No contact found with given phone number");
+                }
+                break;
+
+
+            case 6:
+                sc.nextLine();
                 System.out.println("Enter Name");
                 String deleteContact = sc.nextLine();
 
                 contactManager.deleteContact(deleteContact);
                 break;
 
-            case 6:
+            case 7:
                 System.out.println("Total contacts: " + contactManager.getTotalContacts());
                 break;
 
-            case 7:
+            case 8:
                 System.exit(0);
         }
             
