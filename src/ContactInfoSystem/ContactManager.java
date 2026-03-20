@@ -28,13 +28,18 @@ public class ContactManager {
             System.out.println("No Contacts Available!");
         } else {
             System.out.println("\n===== CONTACT LIST =====\n");
-            System.out.printf("%-5s %-15s %-15s %-25s\n", "No", "Name", "Phone", "Email");
-            System.out.println("-------------------------------------------------------------");
+            System.out.printf("%-5s %-20s %-18s %-30s\n", "No", "Name", "Phone", "Email");
+            System.out.println("--------------------------------------------------------------------------");
 
             int i = 1;
             for(Contact c : contacts){
-                System.out.printf("%-5d", i);
-                c.displayShortContacts();
+                //formatted string
+                System.out.printf("%-5d %-20s %-18s %-30s\n" ,
+                i,
+                c.getName(),
+                c.getPhoneNumber(),
+                c.getEmail()
+                );
                 i++;
             }
         }
