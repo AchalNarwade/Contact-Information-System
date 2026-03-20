@@ -37,10 +37,31 @@ public class Main {
                 sc.nextLine();
                 System.out.println("Enter Name: ");
                 String name = sc.nextLine();
+
+                //validating name
+                if(name.isEmpty()){
+                    System.out.println("Name cannot be empty.");
+                    break;
+                }
+
                 System.out.println("Enter Phone Number : ");
                 String phoneNo = sc.nextLine();
+
+                //validating phone number(Stronger validation)
+                if(!phoneNo.matches("\\d{10}")){
+                    System.out.println("Invalid phone number.Enter 10 digits only.");
+                    break;
+                }
+
                 System.out.println("Enter Email: ");
                 String email = sc.nextLine();
+
+                //validating email
+                if(!email.contains("@")){
+                    System.out.println("Invalid email format");
+                    break;
+                }
+
                 System.out.println("Enter Address: ");
                 String address = sc.nextLine();
                 //new contact object lives inside arraylist
