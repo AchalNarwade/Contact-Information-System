@@ -140,7 +140,20 @@ public class Main {
                 System.out.println("Enter Name");
                 String deleteContact = sc.nextLine();
 
-                contactManager.deleteContact(deleteContact);
+                Contact contactToDelete = contactManager.findContact(deleteContact);
+
+                if(contactToDelete != null){
+                    System.out.println("Are you sure to delete this contact? (yes/no)");
+                    String confirm = sc.nextLine();
+
+                    if(confirm.equalsIgnoreCase("yes")){ //case-insensitive
+                        contactManager.deleteContact(deleteContact);
+                    }else{
+                        System.out.println("Deletion cancelled");
+                    }
+                }else {
+                    System.out.println("No contact found with given name.");
+                }
                 break;
 
             case 7:
