@@ -27,6 +27,9 @@ public class ContactManager {
         if(contacts.isEmpty()){
             System.out.println("No Contacts Available!");
         } else {
+            //sorting first(Alphabetically) also case-insensitive
+            contacts.sort((c1,c2) -> c1.getName().compareToIgnoreCase(c2.getName()));
+
             System.out.println("\n===== CONTACT LIST =====\n");
             System.out.printf("%-5s %-20s %-18s %-30s\n", "No", "Name", "Phone", "Email");
             System.out.println("--------------------------------------------------------------------------");
