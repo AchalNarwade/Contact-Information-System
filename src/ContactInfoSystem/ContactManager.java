@@ -50,7 +50,7 @@ public class ContactManager {
 //here the contact object is returned as the return type is contact instead of void
     public Contact findContact(String name){
         for(Contact c : contacts){
-            if(c.getName().equals(name)){
+            if(c.getName().toLowerCase().contains(name.toLowerCase())){   //case-insensitive,partial-match
                 return c;
             }
         }
@@ -76,6 +76,17 @@ public class ContactManager {
             }
         }
         return null;
+    }
+
+    public ArrayList<Contact> searchContactsByName(String name){
+        ArrayList<Contact> results = new ArrayList<>();
+
+        for (Contact c : contacts){
+            if(c.getName().toLowerCase().contains(name.toLowerCase())){
+                results.add(c);
+            }
+        }
+        return results;
     }
 
     public int getTotalContacts(){ return contacts.size();}

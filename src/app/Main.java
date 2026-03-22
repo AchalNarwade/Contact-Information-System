@@ -4,6 +4,7 @@ package app;
 import ContactInfoSystem.Contact;
 import ContactInfoSystem.ContactManager;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -75,15 +76,22 @@ public class Main {
 
             case 3:
                 sc.nextLine();
-                System.out.println("Enter name: ");
+                System.out.println("Enter name to search: ");
                 String searchName = sc.nextLine();
-                //connects contact manger and contact class
-                Contact contactToSearch = contactManager.findContact(searchName);
 
-                if(contactToSearch != null){
-                    contactToSearch.displayContact();
+                ArrayList<Contact> results = contactManager.searchContactsByName(searchName);
+
+                if(results.isEmpty()){
+                    System.out.println("No contact found");
                 }else{
-                    System.out.println("No contact found with the given detail.");
+                    System.out.println("\nSearch Result\n");
+
+                    int i=1;
+                    for(Contact c : results){
+                        System.out.println("Contact " + i + ":");
+                        c.displayShortContacts();
+                        i++;
+                    }
                 }
                 break;
 
