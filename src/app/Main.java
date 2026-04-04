@@ -3,7 +3,9 @@ package app;
 
 import ContactInfoSystem.Contact;
 import ContactInfoSystem.ContactManager;
+import ContactInfoSystem.DBConnection;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,6 +13,14 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         ContactManager contactManager = new ContactManager();
+
+        Connection conn = DBConnection.getConnection();
+
+        if(conn != null){
+            System.out.println("Connected!");
+        } else {
+            System.out.println("Failed!");
+        }
 
         while(true){
             System.out.println("\n1. Add Contact");
