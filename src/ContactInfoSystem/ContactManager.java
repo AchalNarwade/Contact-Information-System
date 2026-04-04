@@ -1,5 +1,7 @@
 package ContactInfoSystem;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 
 public class ContactManager {
@@ -8,19 +10,25 @@ public class ContactManager {
 
     public void addContact(Contact contact){
 
-        //Strict case
-        if(findContactByPhone(contact.getPhoneNumber()) != null){
-            System.out.println("A contact with this phone number already exists!");
-            return;
-        }
+        String query = "INSERT INTO contacts (name, phone, email, address) VALUES (?, ?, ?, ?)";
 
-        //soft check(name)
-        if(findContact(contact.getName()) !=null) {
-            System.out.println("A contact with this name already exits!");
-            return;
+        try {
+            Connection conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query);
+
+            ps.setString(1, contact.getName());
+            ps.setString(2, contact.getPhoneNumber());
+            ps.setString(3, contact.getEmail());
+            ps.setString(4, contact.getAddress());
+
+            ps.executeUpdate();
+
+            System.out.println("Contact added successfully!");
+
+        } catch (Exception e){
+            System.out.println("Error adding contact");
+            e.printStackTrace();
         }
-        contacts.add(contact);
-        System.out.println("Contact Successfully Added");
     }
 
     public void showAllContacts(){
