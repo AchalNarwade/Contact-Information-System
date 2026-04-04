@@ -2,6 +2,8 @@ package ContactInfoSystem;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class ContactManager {
@@ -32,27 +34,35 @@ public class ContactManager {
     }
 
     public void showAllContacts(){
-        if(contacts.isEmpty()){
-            System.out.println("No Contacts Available!");
-        } else {
-            //sorting first(Alphabetically) also case-insensitive
-            contacts.sort((c1,c2) -> c1.getName().compareToIgnoreCase(c2.getName()));
 
-            System.out.println("\n===== CONTACT LIST =====\n");
-            System.out.printf("%-5s %-20s %-18s %-30s\n", "No", "Name", "Phone", "Email");
-            System.out.println("--------------------------------------------------------------------------");
+        String query = "SELECT * FROM contacts ORDER BY LOWER(name) ASC";
+
+        try {
+            Connection conn = DBConnection.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
 
             int i = 1;
-            for(Contact c : contacts){
-                //formatted string
-                System.out.printf("%-5d %-20s %-18s %-30s\n" ,
-                i,
-                c.getName(),
-                c.getPhoneNumber(),
-                c.getEmail()
-                );
-                i++;
+
+            System.out.println("\n--- Contact List ---");
+
+            // Header
+            System.out.printf("%-5s %-20s %-15s %-30s\n",
+                    "No.", "Name", "Phone", "Email");
+            System.out.println("---------------------------------------------------------------");
+
+            while(rs.next()){
+                String name = rs.getString("name");
+                String phone = rs.getString("phone");
+                String email = rs.getString("email");
+
+                System.out.printf("%-5d %-20s %-15s %-30s\n",
+                        i++, name, phone, email);
             }
+
+        } catch (Exception e){
+            System.out.println("Error fetching contacts");
+            e.printStackTrace();
         }
     }
 //here the contact object is returned as the return type is contact instead of void

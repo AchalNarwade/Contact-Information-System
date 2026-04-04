@@ -14,13 +14,6 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         ContactManager contactManager = new ContactManager();
 
-        Connection conn = DBConnection.getConnection();
-
-        if(conn != null){
-            System.out.println("Connected!");
-        } else {
-            System.out.println("Failed!");
-        }
 
         while(true){
             System.out.println("\n1. Add Contact");
