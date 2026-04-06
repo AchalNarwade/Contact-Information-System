@@ -110,14 +110,35 @@ public class ContactManager {
     }
 
     public ArrayList<Contact> searchContactsByName(String name){
+
         ArrayList<Contact> results = new ArrayList<>();
 
-        for (Contact c : contacts){
-            if(c.getName().toLowerCase().contains(name.toLowerCase())){
+        String query = "SELECT * FROM contacts WHERE name LIKE ?";
+
+        try {
+            Connection conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query);
+
+            ps.setString(1, "%" + name + "%");
+
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                Contact c = new Contact(
+                        rs.getString("name"),
+                        rs.getString("phone"),
+                        rs.getString("email"),
+                        rs.getString("address")
+                );
                 results.add(c);
             }
+
+        } catch (Exception e){
+            System.out.println("Error searching contact");
+            e.printStackTrace();
         }
-        return results;
+
+        return results; // 🔥 VERY IMPORTANT
     }
 
     public void updateContact(String phone, String name, String email, String address){
@@ -153,7 +174,7 @@ public class ContactManager {
             if(email != null) ps.setString(index++, email);
             if(address != null) ps.setString(index++, address);
 
-            ps.setString(index, phone);
+            ps.setString(index, phone.trim());
 
             int rows = ps.executeUpdate();
 
