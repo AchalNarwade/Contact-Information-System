@@ -115,76 +115,55 @@ public class Main {
 
             case 5:
                 sc.nextLine();
-                System.out.println("Enter the phone number of contact to update: ");
+                System.out.println("Enter the phone number of contact to update:");
                 String updatePhone = sc.nextLine();
 
-                Contact contactToUpdate = contactManager.findContactByPhone(updatePhone);
+                System.out.println("\nWhat do you want to update?");
+                System.out.println("1. Name");
+                System.out.println("2. Email");
+                System.out.println("3. Address");
 
-                if(contactToUpdate != null){
-                    System.out.println("\nWhat do you want to update?");
-                    System.out.println("1. Phone");
-                    System.out.println("2. Email");
-                    System.out.println("3. Address");
+                int updateChoice = sc.nextInt();
+                sc.nextLine(); // clear buffer
 
-                    int updateChoice = sc.nextInt();
-                    sc.nextLine(); //to clear buffer
+                switch(updateChoice){
 
-                    switch(updateChoice){
+                    case 1:
+                        System.out.println("Enter new Name:");
+                        String newName = sc.nextLine();
+                        contactManager.updateContact(updatePhone, newName, null, null);
+                        break;
 
-                        case 1:
-                            System.out.println("Enter new Phone number");
-                            String newPhone = sc.nextLine();
+                    case 2:
+                        System.out.println("Enter new Email:");
+                        String newEmail = sc.nextLine();
+                        contactManager.updateContact(updatePhone, null, newEmail, null);
+                        break;
 
-                            //check duplicate phone
-                            if(contactManager.findContactByPhone(newPhone) != null){
-                                System.out.println("Phone number already exists!");
-                            }else{
-                                contactToUpdate.setPhoneNumber(newPhone);
-                                System.out.println("Phone number updated successfully");
-                            }
-                            break;
+                    case 3:
+                        System.out.println("Enter new Address:");
+                        String newAddress = sc.nextLine();
+                        contactManager.updateContact(updatePhone, null, null, newAddress);
+                        break;
 
-                        case 2:
-                            System.out.println("Enter new Email: ");
-                            String newEmail = sc.nextLine();
-                            contactToUpdate.setEmail(newEmail);
-                            System.out.println("Email updated successfully");
-                            break;
-
-                        case 3:
-                            System.out.println("Enter new Address: ");
-                            String newAddress = sc.nextLine();
-                            contactToUpdate.setAddress(newAddress);
-                            System.out.println("Address updated successfully");
-                            break;
-
-                        default:
-                            System.out.println("Invalid choice");
-                    }
-                }else {
-                    System.out.println("No contact found with given phone number");
+                    default:
+                        System.out.println("Invalid choice");
                 }
                 break;
 
 
             case 6:
                 sc.nextLine();
-                System.out.println("Enter Name");
-                String deleteContact = sc.nextLine();
+                System.out.println("Enter phone number to delete:");
+                String phone = sc.nextLine();
 
-                Contact contactToDelete = contactManager.findContact(deleteContact);
+                System.out.println("Are you sure to delete this contact? (yes/no)");
+                String confirm = sc.nextLine();
 
-                if(contactToDelete != null){
-                    System.out.println("Are you sure to delete this contact? (yes/no)");
-                    String confirm = sc.nextLine();
-
-                    if(confirm.equalsIgnoreCase("yes")){ //case-insensitive
-                        contactManager.deleteContact(deleteContact);
-                    }else{
-                        System.out.println("Deletion cancelled");
-                    }
-                }else {
-                    System.out.println("No contact found with given name.");
+                if(confirm.equalsIgnoreCase("yes")){
+                    contactManager.deleteContact(phone);
+                } else {
+                    System.out.println("Deletion cancelled");
                 }
                 break;
 

@@ -75,17 +75,30 @@ public class ContactManager {
         return null;
     }
 
-    public void deleteContact(String name){
-        Contact contactToDelete = findContact(name);
+    public void deleteContact(String phone){
 
-        if(contactToDelete != null){
-            contacts.remove(contactToDelete);
-            System.out.println("Contact successfully deleted");
-        }
-        else {
-            System.out.println("Contact not found");
+        String query = "DELETE FROM contacts WHERE phone = ?";
+
+        try {
+            Connection conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query);
+
+            ps.setString(1, phone);
+
+            int rowsAffected = ps.executeUpdate();
+
+            if(rowsAffected > 0){
+                System.out.println("Contact deleted successfully!");
+            } else {
+                System.out.println("Contact not found!");
+            }
+
+        } catch (Exception e){
+            System.out.println("Error deleting contact");
+            e.printStackTrace();
         }
     }
+
 //FIND CONTACT BY PHONE
     public Contact findContactByPhone(String phone){
         for (Contact c : contacts){
@@ -105,6 +118,55 @@ public class ContactManager {
             }
         }
         return results;
+    }
+
+    public void updateContact(String phone, String name, String email, String address){
+
+        StringBuilder query = new StringBuilder("UPDATE contacts SET ");
+        boolean first = true;
+
+        if(name != null){
+            query.append("name = ?");
+            first = false;
+        }
+
+        if(email != null){
+            if(!first) query.append(", ");
+            query.append("email = ?");
+            first = false;
+        }
+
+        if(address != null){
+            if(!first) query.append(", ");
+            query.append("address = ?");
+        }
+
+        query.append(" WHERE phone = ?");
+
+        try {
+            Connection conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(query.toString());
+
+            int index = 1;
+
+            if(name != null) ps.setString(index++, name);
+            if(email != null) ps.setString(index++, email);
+            if(address != null) ps.setString(index++, address);
+
+            ps.setString(index, phone);
+
+            int rows = ps.executeUpdate();
+
+            if(rows > 0){
+                System.out.println("Contact updated successfully!");
+            } else {
+                System.out.println("Contact not found!");
+            }
+
+        } catch (Exception e){
+            System.out.println("Error updating contact");
+            e.printStackTrace();
+        }
     }
 
     public int getTotalContacts(){ return contacts.size();}
