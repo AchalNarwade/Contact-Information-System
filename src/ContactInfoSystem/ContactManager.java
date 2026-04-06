@@ -28,8 +28,12 @@ public class ContactManager {
             System.out.println("Contact added successfully!");
 
         } catch (Exception e){
-            System.out.println("Error adding contact");
-            e.printStackTrace();
+            if(e.getMessage().contains("Duplicate")){
+                System.out.println("Contact with this phone number already exists!");
+            } else {
+                System.out.println("Error adding contact");
+                e.printStackTrace();
+            }
         }
     }
 
