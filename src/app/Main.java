@@ -185,7 +185,7 @@ public class Main {
             case 6: {
                 sc.nextLine();
                 System.out.println("Enter name to search for deletion:");
-                String deleteName = sc.nextLine();
+                String deleteName = sc.nextLine().trim();
 
                 ArrayList<Contact> results = contactManager.searchContactsByName(deleteName);
 
@@ -201,17 +201,18 @@ public class Main {
                     }
 
                     System.out.println("Enter choice:");
-                    int deletechoice = sc.nextInt();
+                    int deleteChoice = sc.nextInt();
                     sc.nextLine();
 
-                    if (deletechoice > 0 && choice <= results.size()) {
-                        Contact selected = results.get(choice - 1);
+                    if(deleteChoice >= 1 && deleteChoice <= results.size()){
+                        Contact selected = results.get(deleteChoice - 1);
 
                         System.out.println("Are you sure to delete? (yes/no)");
                         String confirm = sc.nextLine();
 
                         if (confirm.equalsIgnoreCase("yes")) {
                             contactManager.deleteContact(selected.getPhoneNumber());
+                            break;
                         } else {
                             System.out.println("Deletion cancelled");
                         }

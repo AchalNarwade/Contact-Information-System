@@ -117,7 +117,7 @@ public class ContactManager {
 
         ArrayList<Contact> results = new ArrayList<>();
 
-        String query = "SELECT * FROM contacts WHERE name LIKE ?";
+        String query = "SELECT * FROM contacts WHERE LOWER(name) LIKE LOWER(?)";
 
         try {
             Connection conn = DBConnection.getConnection();
