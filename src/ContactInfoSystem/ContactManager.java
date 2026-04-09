@@ -1,22 +1,17 @@
 package ContactInfoSystem;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class ContactManager {
 
-    private ArrayList<Contact> contacts = new ArrayList<>();
-
-    public void addContact(Contact contact){
+    // ADD CONTACT
+    public void addContact(Contact contact) {
 
         String query = "INSERT INTO contacts (name, phone, email, address) VALUES (?, ?, ?, ?)";
 
-        try {
-            Connection conn = DBConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(query);
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
 
             ps.setString(1, contact.getName());
             ps.setString(2, contact.getPhoneNumber());
@@ -24,11 +19,10 @@ public class ContactManager {
             ps.setString(4, contact.getAddress());
 
             ps.executeUpdate();
-
             System.out.println("Contact added successfully!");
 
-        } catch (Exception e){
-            if(e.getMessage().contains("Duplicate")){
+        } catch (Exception e) {
+            if (e.getMessage().contains("Duplicate")) {
                 System.out.println("Contact with this phone number already exists!");
             } else {
                 System.out.println("Error adding contact");
@@ -37,162 +31,183 @@ public class ContactManager {
         }
     }
 
-    public void showAllContacts(){
+    // SHOW ALL CONTACTS
+    public ArrayList<Contact> getAllContacts() {
 
+        ArrayList<Contact> list = new ArrayList<>();
         String query = "SELECT * FROM contacts ORDER BY LOWER(name) ASC";
 
-        try {
-            Connection conn = DBConnection.getConnection();
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
 
-            int i = 1;
-
-            System.out.println("\n--- Contact List ---");
-
-            // Header
-            System.out.printf("%-5s %-20s %-15s %-30s\n",
-                    "No.", "Name", "Phone", "Email");
-            System.out.println("---------------------------------------------------------------");
-
-            while(rs.next()){
-                String name = rs.getString("name");
-                String phone = rs.getString("phone");
-                String email = rs.getString("email");
-
-                System.out.printf("%-5d %-20s %-15s %-30s\n",
-                        i++, name, phone, email);
+            while (rs.next()) {
+                list.add(new Contact(
+                        rs.getString("name"),
+                        rs.getString("phone"),
+                        rs.getString("email"),
+                        rs.getString("address")
+                ));
             }
 
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error fetching contacts");
             e.printStackTrace();
         }
-    }
-//here the contact object is returned as the return type is contact instead of void
-    public Contact findContact(String name){
-        for(Contact c : contacts){
-            if(c.getName().toLowerCase().contains(name.toLowerCase())){   //case-insensitive,partial-match
-                return c;
-            }
-        }
-        return null;
+
+        return list;
     }
 
-    public void deleteContact(String phone){
-
-        String query = "DELETE FROM contacts WHERE phone = ?";
-
-        try {
-            Connection conn = DBConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(query);
-
-            ps.setString(1, phone);
-
-            int rowsAffected = ps.executeUpdate();
-
-            if(rowsAffected > 0){
-                System.out.println("Contact deleted successfully!");
-            } else {
-                System.out.println("Contact not found!");
-            }
-
-        } catch (Exception e){
-            System.out.println("Error deleting contact");
-            e.printStackTrace();
-        }
-    }
-
-//FIND CONTACT BY PHONE
-    public Contact findContactByPhone(String phone){
-        for (Contact c : contacts){
-            if(c.getPhoneNumber().equals(phone)){
-                return c;
-            }
-        }
-        return null;
-    }
-
-    public ArrayList<Contact> searchContactsByName(String name){
+    // SEARCH BY NAME
+    public ArrayList<Contact> searchContactsByName(String name) {
 
         ArrayList<Contact> results = new ArrayList<>();
-
         String query = "SELECT * FROM contacts WHERE LOWER(name) LIKE LOWER(?)";
 
-        try {
-            Connection conn = DBConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(query);
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
 
             ps.setString(1, "%" + name + "%");
 
             ResultSet rs = ps.executeQuery();
 
-            while(rs.next()){
-                Contact c = new Contact(
+            while (rs.next()) {
+                results.add(new Contact(
+                        rs.getString("name"),
+                        rs.getString("phone"),
+                        rs.getString("email"),
+                        rs.getString("address")
+                ));
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error searching contact");
+            e.printStackTrace();
+        }
+
+        return results;
+    }
+
+    //  FIND BY PHONE (FIXED → DB BASED)
+    public Contact findContactByPhone(String phone) {
+
+        String query = "SELECT * FROM contacts WHERE phone = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setString(1, phone);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Contact(
                         rs.getString("name"),
                         rs.getString("phone"),
                         rs.getString("email"),
                         rs.getString("address")
                 );
-                results.add(c);
             }
 
-        } catch (Exception e){
-            System.out.println("Error searching contact");
+        } catch (Exception e) {
+            System.out.println("Error finding contact");
             e.printStackTrace();
         }
 
-        return results; // 🔥 VERY IMPORTANT
+        return null;
     }
 
-    public void updateContact(String phone, String name, String email, String address){
+    // DELETE
+    public void deleteContact(String phone) {
+
+        String query = "DELETE FROM contacts WHERE phone = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setString(1, phone);
+
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Contact deleted successfully!");
+            } else {
+                System.out.println("Contact not found!");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error deleting contact");
+            e.printStackTrace();
+        }
+    }
+
+    // UPDATE
+    public void updateContact(String phone, String name, String email, String address) {
 
         StringBuilder query = new StringBuilder("UPDATE contacts SET ");
         boolean first = true;
 
-        if(name != null){
+        if (name != null) {
             query.append("name = ?");
             first = false;
         }
 
-        if(email != null){
-            if(!first) query.append(", ");
+        if (email != null) {
+            if (!first) query.append(", ");
             query.append("email = ?");
             first = false;
         }
 
-        if(address != null){
-            if(!first) query.append(", ");
+        if (address != null) {
+            if (!first) query.append(", ");
             query.append("address = ?");
         }
 
         query.append(" WHERE phone = ?");
 
-        try {
-            Connection conn = DBConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(query.toString());
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query.toString())) {
 
             int index = 1;
 
-            if(name != null) ps.setString(index++, name);
-            if(email != null) ps.setString(index++, email);
-            if(address != null) ps.setString(index++, address);
+            if (name != null) ps.setString(index++, name);
+            if (email != null) ps.setString(index++, email);
+            if (address != null) ps.setString(index++, address);
 
-            ps.setString(index, phone.trim());
+            ps.setString(index, phone);
 
             int rows = ps.executeUpdate();
 
-            if(rows > 0){
+            if (rows > 0) {
                 System.out.println("Contact updated successfully!");
             } else {
                 System.out.println("Contact not found!");
             }
 
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error updating contact");
             e.printStackTrace();
         }
     }
 
-    public int getTotalContacts(){ return contacts.size();}
+    //  TOTAL CONTACTS (FIXED → DB COUNT)
+    public int getTotalContacts() {
+
+        String query = "SELECT COUNT(*) FROM contacts";
+
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error counting contacts");
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
 }

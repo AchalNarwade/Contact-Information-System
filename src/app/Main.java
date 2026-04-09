@@ -74,7 +74,11 @@ public class Main {
                 break;
             }
             case 2: {
-                contactManager.showAllContacts();
+                ArrayList<Contact> list = contactManager.getAllContacts();
+
+                for (Contact c : list) {
+                    c.displayShortContacts();
+                }
                 break;
             }
 
