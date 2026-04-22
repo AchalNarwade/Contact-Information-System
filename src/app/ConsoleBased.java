@@ -50,7 +50,7 @@ public class ConsoleBased {
                         System.out.println("Enter Phone Number : ");
                         String phoneNo = sc.nextLine();
 
-                        //validating phone number(Stronger validation)
+                        //validating phone number that it must be 10 digits only
                         if (!phoneNo.matches("\\d{10}")) {
                             System.out.println("Invalid phone number.Enter 10 digits only.");
                             break;
@@ -59,7 +59,7 @@ public class ConsoleBased {
                         System.out.println("Enter Email: ");
                         String email = sc.nextLine();
 
-                        //validating email
+                        //validating email-it must have @
                         if (!email.contains("@")) {
                             System.out.println("Invalid email format");
                             break;

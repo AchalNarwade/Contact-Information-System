@@ -10,13 +10,13 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ContactUI extends JFrame {
+public class ContactUI extends JFrame { //to create window based application
 
-    // ===== VARIABLES =====
-    private ContactManager manager = new ContactManager();
+    //VARIABLES
+    private ContactManager manager = new ContactManager(); //connects ui to backend
     private JTable table;
     private DefaultTableModel model;
-    private JTextField searchField;
+    private JTextField searchField; //for live search
 
     //FONTS
     private Font mainFont = new Font("Segoe UI", Font.PLAIN, 16);
@@ -32,14 +32,15 @@ public class ContactUI extends JFrame {
         setLayout(new BorderLayout());
 
         //TOP PANEL
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10)); //for button and search
 
         JLabel searchLabel = new JLabel("Search:");
         searchLabel.setFont(buttonFont);
 
-        searchField = new JTextField(20);
+        searchField = new JTextField(20); //input for searching
         searchField.setFont(mainFont);
 
+        //buttons for operation
         JButton addBtn = new JButton("Add");
         JButton updateBtn = new JButton("Update");
         JButton deleteBtn = new JButton("Delete");
@@ -60,10 +61,11 @@ public class ContactUI extends JFrame {
 
         add(topPanel, BorderLayout.NORTH);
 
-        // TABLE
+        // TABLE-defines table column
         model = new DefaultTableModel(
                 new String[]{"Name", "Phone", "Email", "Address"}, 0);
 
+        //connects data with table
         table = new JTable(model);
         table.setFont(mainFont);
         table.setRowHeight(28);
@@ -73,7 +75,7 @@ public class ContactUI extends JFrame {
 
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // ===== BUTTON ACTIONS =====
+        //BUTTON ACTIONS-calls methods on clicking
         addBtn.addActionListener(e -> openAddDialog());
         updateBtn.addActionListener(e -> openUpdateDialog());
         deleteBtn.addActionListener(e -> deleteContact());
@@ -85,20 +87,20 @@ public class ContactUI extends JFrame {
             public void changedUpdate(DocumentEvent e) { search(); }
 
             private void search() {
-                liveSearch(searchField.getText());
+                liveSearch(searchField.getText()); //calls search whenever user type
             }
         });
 
-        // ===== INITIAL LOAD =====
-        loadContacts();
-        setVisible(true);
+        //INITIAL LOAD
+        loadContacts(); //loads all the data when the app starts
+        setVisible(true);//show window
     }
 
-    // ===== LOAD CONTACTS =====
+    //LOAD CONTACTS
     private void loadContacts() {
-        model.setRowCount(0);
+        model.setRowCount(0); //clear tables and reload the fresh data
 
-        ArrayList<Contact> list = manager.getAllContacts();
+        ArrayList<Contact> list = manager.getAllContacts(); //fetch the contacts from the database
 
         for (Contact c : list) {
             model.addRow(new Object[]{
@@ -110,7 +112,7 @@ public class ContactUI extends JFrame {
         }
     }
 
-    // ===== LIVE SEARCH =====
+    //LIVE SEARCH
     private void liveSearch(String text) {
         model.setRowCount(0);
 
@@ -126,7 +128,7 @@ public class ContactUI extends JFrame {
         }
     }
 
-    // ===== ADD CONTACT =====
+    //ADD CONTACT
     private void openAddDialog() {
         JTextField name = new JTextField();
         JTextField phone = new JTextField();
@@ -145,17 +147,18 @@ public class ContactUI extends JFrame {
                 "Address:", address
         };
 
-        int option = JOptionPane.showConfirmDialog(
+        int option = JOptionPane.showConfirmDialog( //this ensures that no separate window
                 this, fields, "Add Contact", JOptionPane.OK_CANCEL_OPTION);
 
         if (option == JOptionPane.OK_OPTION) {
 
+            //this handles all the errors validation while adding contacts
             if (name.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Name cannot be empty");
                 return;
             }
 
-            if (!phone.getText().matches("\\d{10}")) {
+            if (!phone.getText().matches("\\d{10}")) { //used regex for validating the number should be 10 digits
                 JOptionPane.showMessageDialog(this, "Invalid phone number");
                 return;
             }
@@ -165,6 +168,7 @@ public class ContactUI extends JFrame {
                 return;
             }
 
+            //convert input to the object
             Contact c = new Contact(
                     name.getText(),
                     phone.getText(),
@@ -172,12 +176,12 @@ public class ContactUI extends JFrame {
                     address.getText()
             );
 
-            manager.addContact(c);
+            manager.addContact(c); //sends the newly added data to the backend
             loadContacts();
         }
     }
 
-    // ===== UPDATE CONTACT =====
+    //UPDATE CONTACT
     private void openUpdateDialog() {
 
         String name = JOptionPane.showInputDialog(this, "Enter name to update:");
@@ -257,7 +261,7 @@ public class ContactUI extends JFrame {
         }
     }
 
-    // ===== DELETE CONTACT =====
+    //DELETE CONTACT
     private void deleteContact() {
         int row = table.getSelectedRow();
 

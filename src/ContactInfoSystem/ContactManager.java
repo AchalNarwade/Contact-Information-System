@@ -8,6 +8,7 @@ public class ContactManager {
     // ADD CONTACT
     public void addContact(Contact contact) {
 
+        //INSERT sql query
         String query = "INSERT INTO contacts (name, phone, email, address) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
@@ -31,7 +32,7 @@ public class ContactManager {
         }
     }
 
-    // SHOW ALL CONTACTS
+    // get all contacts
     public ArrayList<Contact> getAllContacts() {
 
         ArrayList<Contact> list = new ArrayList<>();
@@ -62,7 +63,7 @@ public class ContactManager {
     public ArrayList<Contact> searchContactsByName(String name) {
 
         ArrayList<Contact> results = new ArrayList<>();
-        String query = "SELECT * FROM contacts WHERE LOWER(name) LIKE LOWER(?)";
+        String query = "SELECT * FROM contacts WHERE LOWER(name) LIKE LOWER(?)"; //partial matching
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(query)) {
@@ -88,7 +89,7 @@ public class ContactManager {
         return results;
     }
 
-    //  FIND BY PHONE (FIXED → DB BASED)
+    //  FIND BY PHONE -phone is the unique identifier
     public Contact findContactByPhone(String phone) {
 
         String query = "SELECT * FROM contacts WHERE phone = ?";
@@ -127,7 +128,7 @@ public class ContactManager {
 
             ps.setString(1, phone);
 
-            int rowsAffected = ps.executeUpdate();
+            int rowsAffected = ps.executeUpdate(); // to confirm the deletion
 
             if (rowsAffected > 0) {
                 System.out.println("Contact deleted successfully!");
@@ -144,7 +145,7 @@ public class ContactManager {
     // UPDATE
     public void updateContact(String phone, String name, String email, String address) {
 
-        StringBuilder query = new StringBuilder("UPDATE contacts SET ");
+        StringBuilder query = new StringBuilder("UPDATE contacts SET "); //builds query dynamically-to update only provided field
         boolean first = true;
 
         if (name != null) {

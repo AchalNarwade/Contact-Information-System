@@ -7,14 +7,14 @@ public class Contact {
     private String email;
     private String address;
 
-//CONSTRUCTOR
+//CONSTRUCTOR - initializes objects with values
     public Contact(String name,String phoneNumber, String email,String address ){
         this.name = name;
         this.phoneNumber= phoneNumber;
         this.email = email;
         this.address = address;
     }
-//DISPLAY METHODS
+//DISPLAY METHODS - used in console
     public void displayContact(){
         System.out.println("CONTACT Details: ");
         System.out.println(
@@ -25,14 +25,14 @@ public class Contact {
         );
     }
 
-//DISPLAY SHORT CONTACTS
+//DISPLAY SHORT CONTACTS - used in console
     public void displayShortContacts(){
         System.out.println(name + " |" + phoneNumber + " |" + email + " |");
     }
 
 
 
-//GETTER METHODS
+//getters - to read data
     public String getName(){
         return name;
     }
@@ -49,7 +49,7 @@ public class Contact {
         return address;
     }
 
-//getters to update contacts
+//setter to update data
 
     public void setPhoneNumber(String phoneNumber){
         this.phoneNumber = phoneNumber;
